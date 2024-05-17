@@ -3,22 +3,22 @@
     Nom: x-yanmangiagl-setup.ps1
     Auteur: Yann Mangiagli
     Date de création: 15 mai 2024
-    Date de modification 1 : 16 mai 2024
-    Raison: Ajout de fonctionnalités
+    Date de modification 1 : 17 mai 2024
+    Raison: Changement de commentaires + changements légers pour respecter les conventions
 
 
 .SYNOPSIS
-    Copie / colle un script et cree une tâche planifiée
+    Copie / colle un script et crée une tâche planifiée
 
 .DESCRIPTION
     Copie un script nomme à un chemin specifique et le colle dans un pc distant
-    Crée une tache planifiee permettant de lancer le script installe plus tôt
+    Crée une tache planifiee permettant de lancer le script installé plus tôt
 
 .EXAMPLE
-.\x-yanmangiagl-setup.ps1 -ComputerList "yann2k22srv"
+.\x-yanmangiagl-setup.ps1 -remoteip "192.168.10.51"
 
 .EXAMPLE
-.\x-yanmangiagl-setup.ps1 -ComputerList "yann2k22srv","yann2k22srv2"
+.\x-yanmangiagl-setup.ps1 -remoteip "192.168.10.51","192.168.10.53"
 
 .PARAMETER ComputerList
     Liste des ordinateurs sur lesquels le script effectuera la copie
@@ -27,24 +27,24 @@
     https://github.com/Yann-Mangiagli/tpi/tree/main/scripts
 #>
 
-# Cree un paramètre tableau
+# Crée un paramètre tableau
 param([string[]]$remoteip)
 
-# Creation tableau
+# Création tableau de maximum 10
 $computerList= New-Object System.Collections.ArrayList(10)
 
 # Ajout de tous les ordinateurs dans le tableau
-foreach($computerIP in $remoteip){
-    $computerList.Add($computerIP) | Out-Null
+foreach($computerip in $remoteip){
+    $computerList.Add($computerip) | Out-Null
 }
 
 # Entrée du mot de passe à utiliser dans les credentiels
 $password = ConvertTo-SecureString(".Etml-123") -AsPlainText -Force
 
-# Renseignement des credentiels automatique
+# Renseignement des crédentiels automatique
 $credentials = new-object -typename System.Management.Automation.PSCredential -argumentlist "Administrateur", $password
 
-# Instanciation des chemins (start path = $PWD + \x-yanmangiagl-monitoring.ps1) à changer après si y'a le temps
+# Instanciation des chemins /!\ à changer après
 $startPath = "D:\FIN22-24\FIN2\00-TPI\tpi\scripts\x-yanmangiagl-monitoring.ps1"
 $destinationPath = "C:\Scripts"
 
