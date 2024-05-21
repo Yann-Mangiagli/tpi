@@ -1,0 +1,12 @@
+Copy-Item :
+https://www.youtube.com/watch?v=REMpMdkkJsg
+https://learn.microsoft.com/fr-fr/powershell/module/microsoft.powershell.management/copy-item?view=powershell-7.4&viewFallbackFrom=powershell-6
+
+copy-item to remote :
+https://youtube.com/watch?v=P1zDkxSpzaQ
+
+pth null test
+https://stackoverflow.com/questions/46923735/powershell-value-of-argument-path-is-null
+
+check version powershell
+https://www.howtogeek.com/731885/how-to-check-the-powershell-version-in-windows-10/
