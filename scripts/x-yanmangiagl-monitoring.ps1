@@ -28,7 +28,8 @@ $valuesArray = @{
     VersionOS = "x";
     EspaceUtilise = "x";
     EspaceLibre = "x";
-    VersionMAJ = "x"
+    VersionMAJ = "x";
+    #LettreDisk = "x"
 }
 
 # Récupération du nom de l'ordinateur
@@ -37,16 +38,21 @@ $valuesArray.MachineNom = $env:COMPUTERNAME
 # Récupération de la version de l'OS
 $valuesArray.VersionOS =  $env:OS + " "+ [environment]::OSVersion.Version.Build
 
-# Récupération de l'espace disque libre
+# Récupération de l'espace disque libre et de la lettre
+$valuesArray.EspaceLibre = Get-PSDrive | Select-Object free # tester -ExcludeProperty jeudi
 
 # Récupération de l'espace disque utilisé
+$valuesArray.EspaceUtilise = Get-PSDrive | Select-Object Used
 
 # Récupération des versions de mise à jour de l'OS
+$valuesArray.VersionMAJ = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
 
 # Calcul du pourcentage d'utilisation du disque
+$diskPercent = 80
 
 # Si l'espace disque est plus utilisé ou égal à 80%, entrer
-
+if($diskPercent -ge 80){
+    
     # Crédentiels du serveur SMTP
     $server = "smtp.gmail.com"
     $port = 587
@@ -55,7 +61,9 @@ $valuesArray.VersionOS =  $env:OS + " "+ [environment]::OSVersion.Version.Build
     $sender = "pappro2mail@gmail.com"
     $recipient = "tpiymetml@gmail.com"
     $subject = "Report - Disque saturé"
-    $body = ""
+    $body = "L'ordinateur " + $valuesArray.MachineNom + " est surchargé.`n
+    Version de l'OS: " + $valuesArray.VersionOS + "`n
+    Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n" #Mettre valeur qui a été créée dans un foreach plus haut
 
     # Identifiants
     $password = "fxkj gfff ebmt jprz"
@@ -67,3 +75,4 @@ $valuesArray.VersionOS =  $env:OS + " "+ [environment]::OSVersion.Version.Build
 
     # Envoi du mail
     Send-MailMessage -SmtpServer $server -Port $port -UseSsl -Credential $creds -From $sender -To $recipient -Subject $subject -Body $body
+}
