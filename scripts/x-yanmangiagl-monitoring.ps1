@@ -75,7 +75,7 @@ if($diskPercent -ge 80){
     # Détails de l'email
     $sender = "pappro2mail@gmail.com"
     $recipient = "tpiymetml@gmail.com"
-    $subject = "Report - Disque saturé"
+    $subject = "Report - Disque presque plein"
     $body = "L'ordinateur " + $valuesArray.MachineNom + " est surchargé.`n
     Version de l'OS: " + $valuesArray.VersionOS + "`n
     Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n" #Mettre valeur qui a été créée dans un foreach plus haut
@@ -91,3 +91,7 @@ if($diskPercent -ge 80){
     # Envoi du mail
     Send-MailMessage -SmtpServer $server -Port $port -UseSsl -Credential $creds -From $sender -To $recipient -Subject $subject -Body $body
 }
+
+# Check si disque comporte des fichiers OVA ed plus de 3Go
+
+# Supprime fichiers OVA de plus de 3Go
