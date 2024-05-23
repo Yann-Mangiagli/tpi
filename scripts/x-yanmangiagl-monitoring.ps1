@@ -39,16 +39,31 @@ $valuesArray.MachineNom = $env:COMPUTERNAME
 $valuesArray.VersionOS =  $env:OS + " "+ [environment]::OSVersion.Version.Build
 
 # Récupération de l'espace disque libre et de la lettre
-$valuesArray.EspaceLibre = Get-PSDrive | Select-Object free # tester -ExcludeProperty jeudi
+$tempvalue = Get-PSDrive | Select-Object Free
+$valuesArray.EspaceLibre = $tempvalue.Free
 
 # Récupération de l'espace disque utilisé
-$valuesArray.EspaceUtilise = Get-PSDrive | Select-Object Used
+$tempvalue = Get-PSDrive | Select-Object Used
+$valuesArray.EspaceUtilise = $tempvalue.Used
 
 # Récupération des versions de mise à jour de l'OS
-$valuesArray.VersionMAJ = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
+$tempvalue = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
+$valuesArray.VersionMAJ = $tempvalue.HotFixID
 
 # Calcul du pourcentage d'utilisation du disque
-$diskPercent = 80
+$diskPercent = 80 # Pour envoi mail debug
+
+# Addition des valeurs d'espace utilisé
+$usedSpace = $valuesArray.EspaceUtilise | Measure-Object -Sum
+
+# Addition des valeurs d'espace libre
+$freeSpace = $valuesArray.EspaceLibre | Measure-Object -Sum
+
+# Addition des 2 valeurs pour avoir la valeur totale
+$totalSpace = $usedSpace.Sum + $freeSpace.Sum
+
+# Calcul
+$diskpercent = ($usedSpace.Sum*100)/$totalSpace
 
 # Si l'espace disque est plus utilisé ou égal à 80%, entrer
 if($diskPercent -ge 80){
@@ -65,7 +80,7 @@ if($diskPercent -ge 80){
     Version de l'OS: " + $valuesArray.VersionOS + "`n
     Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n" #Mettre valeur qui a été créée dans un foreach plus haut
 
-    # Identifiants
+    # Identifiants (mot de passe d'application google)
     $password = "fxkj gfff ebmt jprz"
 
     #Sécurisation du mot de passe
