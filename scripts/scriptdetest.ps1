@@ -13,3 +13,7 @@ foreach($computerIP in $remoteip){
 foreach($computer in $computerList){
     Write-Host "Dans computer" $computer
 }
+$PSScriptRootT = $PSScriptRoot
+Write-Host $PSScriptRootT
+$zouz = (Get-Item  $PSScriptRootT).Parent.Parent.Parent.Parent
+Write-Host = $zouz

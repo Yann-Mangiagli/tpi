@@ -50,8 +50,7 @@ $valuesArray.EspaceUtilise = $tempvalue.Used
 $tempvalue = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
 $valuesArray.VersionMAJ = $tempvalue.HotFixID
 
-# Calcul du pourcentage d'utilisation du disque
-$diskPercent = 80 # Pour envoi mail debug
+# $diskPercent = 80 # Pour envoi mail debug
 
 # Addition des valeurs d'espace utilisé
 $usedSpace = $valuesArray.EspaceUtilise | Measure-Object -Sum
@@ -62,7 +61,7 @@ $freeSpace = $valuesArray.EspaceLibre | Measure-Object -Sum
 # Addition des 2 valeurs pour avoir la valeur totale
 $totalSpace = $usedSpace.Sum + $freeSpace.Sum
 
-# Calcul
+# Calcul du pourcentage d'utilisation du disque
 $diskpercent = ($usedSpace.Sum*100)/$totalSpace
 
 # Si l'espace disque est plus utilisé ou égal à 80%, entrer
@@ -76,9 +75,9 @@ if($diskPercent -ge 80){
     $sender = "pappro2mail@gmail.com"
     $recipient = "tpiymetml@gmail.com"
     $subject = "Report - Disque presque plein"
-    $body = "L'ordinateur " + $valuesArray.MachineNom + " est surchargé.`n
+    $body = "L'ordinateur " + $valuesArray.MachineNom + " est victime de surcharge.`n
     Version de l'OS: " + $valuesArray.VersionOS + "`n
-    Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n" #Mettre valeur qui a été créée dans un foreach plus haut
+    Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n"
 
     # Identifiants (mot de passe d'application google)
     $password = "fxkj gfff ebmt jprz"
@@ -90,8 +89,9 @@ if($diskPercent -ge 80){
 
     # Envoi du mail
     Send-MailMessage -SmtpServer $server -Port $port -UseSsl -Credential $creds -From $sender -To $recipient -Subject $subject -Body $body
+
+    # SUpprime les fichiers de plus de 3Gb contenant l'extension ova
+    Get-ChildItem -Path "C:\" -Recurse | Where-Object { $_.Extension -eq '.ova' -and $_.Length -gt 3GB } | Remove-Item -Force
+
+    Write-Host "Travail effectué, vous pouvez consulter votre boîte mail"
 }
-
-# Check si disque comporte des fichiers OVA ed plus de 3Go
-
-# Supprime fichiers OVA de plus de 3Go
