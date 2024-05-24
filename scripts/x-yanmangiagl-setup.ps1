@@ -5,6 +5,8 @@
     Date de création: 15 mai 2024
     Date de modification 1 : 17 mai 2024
     Raison: Changement de commentaires + changements légers pour respecter les conventions
+    Date de modification 2 : 24 mai 2024
+    Raison: Debug pour faire apparaître le chemin du script correctement dans les arguments
 
 
 .SYNOPSIS
@@ -60,7 +62,7 @@ foreach($computer in $computerList){
 
     Invoke-Command -Session $session -ScriptBlock {
        # Concatenation du chemin
-       $fullpath = $destinationPath + '\x-yanmangiagl-monitoring.ps1'
+       $fullpath = '-File ' + '"C:\Scripts\x-yanmangiagl-monitoring.ps1"'
 
        # Creation d'une tâche planifiee
        $task = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $fullpath
