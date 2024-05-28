@@ -95,7 +95,7 @@ if($diskPercent -ge 80){
     # Envoi du mail
     Send-MailMessage -SmtpServer $server -Port $port -UseSsl -Credential $creds -From $sender -To $recipient -Subject $subject -Body $body
 
-    # SUpprime les fichiers de plus de 3Gb contenant l'extension ova
+    # Supprime les fichiers de plus de 3Gb contenant l'extension ova
     Get-ChildItem -Path "C:\" -Recurse | Where-Object { $_.Extension -eq '.ova' -and $_.Length -gt 3GB } | Remove-Item -Force
 
     Write-Host "Travail effectué, vous pouvez consulter votre boîte mail"
