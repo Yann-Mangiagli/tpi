@@ -53,7 +53,7 @@ $valuesArray.EspaceUtilise = $tempvalue.Used
 $tempvalue = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
 $valuesArray.VersionMAJ = $tempvalue.HotFixID
 
-$diskPercent = 80 # Pour envoi mail debug
+# $diskPercent = 80 # Pour envoi mail debug
 
 # Addition des valeurs d'espace utilisé
 $usedSpace = $valuesArray.EspaceUtilise | Measure-Object -Sum
@@ -65,7 +65,7 @@ $freeSpace = $valuesArray.EspaceLibre | Measure-Object -Sum
 $totalSpace = $usedSpace.Sum + $freeSpace.Sum
 
 # Calcul du pourcentage d'utilisation du disque
-# $diskpercent = ($usedSpace.Sum*100)/$totalSpace
+$diskpercent = ($usedSpace.Sum*100)/$totalSpace
 
 # Si l'espace disque est plus utilisé ou égal à 80%, entrer
 if($diskPercent -ge 80){
