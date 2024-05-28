@@ -8,7 +8,8 @@
     Date de modification 2 : 24 mai 2024
     Raison: Debug pour faire apparaître le chemin du script correctement dans les arguments
     + ajouts de try catch
-
+    Date de modification 3 : 27 mai 2024
+    Raison: Ajout de Write-Host pour dire que l'action a été réalisée
 
 .SYNOPSIS
     Copie / colle un script et crée une tâche planifiée
@@ -62,7 +63,7 @@ $password = ConvertTo-SecureString(".Etml-123") -AsPlainText -Force
 # Renseignement des crédentiels automatique
 $credentials = new-object -typename System.Management.Automation.PSCredential -argumentlist "Administrateur", $password
 
-#
+# Nom du script
 $scriptName = "\x-yanmangiagl-monitoring.ps1"
 
 # Instanciation des chemins
@@ -78,8 +79,17 @@ try{
     # Création d'une session
     $session = New-PSSession -ComputerName $remotename -Credential $credentials
 
+    # Vérifie que le dossier Scripts existe
+    Invoke-Command -Session $session -ScriptBlock{
+    $folderExists = Test-Path -Path "C:\Scripts"
+        if(!($folderExists)){
+            New-Item -Path "C:\Scripts" -ItemType Directory
+        }
+    }
+
     # Copie depuis machine locale du fichier et colle sur la machine distante ou la liste d'ordinateur
     Copy-Item $startPath -Destination $destinationPath -ToSession $session
+    Write-Host "Fichier copié dans " $destinationPath
 
     Invoke-Command -Session $session -ScriptBlock {
        # Concatenation du chemin
@@ -99,6 +109,8 @@ try{
 
        # Enregistrement de la tache
        Register-ScheduledTask -TaskName $taskName -Action $task -Trigger $taskInterval -Description $taskDesc
+
+       Write-Host "Tâche planifiée créée"
     }
 }
 }catch{

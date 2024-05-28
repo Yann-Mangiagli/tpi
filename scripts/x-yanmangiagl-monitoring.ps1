@@ -3,6 +3,10 @@
     Nom: x-yanmangiagl-monitoring.ps1
     Auteur: Yann Mangiagli
     Date de création: 15 mai 2024
+    Date de modification : 24 mai 2024
+    Raison: Ajout de fonctionnalités
+    Date de modification 2 : 27 mai 2024
+    Raison: Ajout de l'espace de stockage utilisé et libre dans le mail
 
 
 .SYNOPSIS
@@ -29,7 +33,6 @@ $valuesArray = @{
     EspaceUtilise = "x";
     EspaceLibre = "x";
     VersionMAJ = "x";
-    #LettreDisk = "x"
 }
 
 # Récupération du nom de l'ordinateur
@@ -50,7 +53,7 @@ $valuesArray.EspaceUtilise = $tempvalue.Used
 $tempvalue = Get-HotFix -ComputerName $valuesArray.MachineNom | Select HotFixID
 $valuesArray.VersionMAJ = $tempvalue.HotFixID
 
-# $diskPercent = 80 # Pour envoi mail debug
+$diskPercent = 80 # Pour envoi mail debug
 
 # Addition des valeurs d'espace utilisé
 $usedSpace = $valuesArray.EspaceUtilise | Measure-Object -Sum
@@ -62,7 +65,7 @@ $freeSpace = $valuesArray.EspaceLibre | Measure-Object -Sum
 $totalSpace = $usedSpace.Sum + $freeSpace.Sum
 
 # Calcul du pourcentage d'utilisation du disque
-$diskpercent = ($usedSpace.Sum*100)/$totalSpace
+# $diskpercent = ($usedSpace.Sum*100)/$totalSpace
 
 # Si l'espace disque est plus utilisé ou égal à 80%, entrer
 if($diskPercent -ge 80){
@@ -77,7 +80,9 @@ if($diskPercent -ge 80){
     $subject = "Report - Disque presque plein"
     $body = "L'ordinateur " + $valuesArray.MachineNom + " est victime de surcharge.`n
     Version de l'OS: " + $valuesArray.VersionOS + "`n
-    Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n"
+    Versions de MAJ: " + $valuesArray.VersionMAJ+ "`n
+    Utilisation de l'espace (octets): " + $usedSpace.Sum + "`n
+    Espace libre (octets):" + $freeSpace.Sum + "`n"
 
     # Identifiants (mot de passe d'application google)
     $password = "fxkj gfff ebmt jprz"
